@@ -17,7 +17,7 @@ async function testAPI() {
             body: JSON.stringify({
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'password123'
+                password: 'testpass'
             })
         });
         
@@ -40,17 +40,17 @@ async function testAPI() {
             },
             body: JSON.stringify({
                 username: 'testuser',
-                password: 'password123'
+                password: 'testpass'
             })
         });
         
         if (loginResponse.ok) {
             const loginData = await loginResponse.json();
             console.log('✅ Login exitoso');
-            console.log('   Token:', loginData.token.substring(0, 50) + '...');
+            console.log('   Token:', loginData.access_token.substring(0, 50) + '...');
             
             // Guardar token para siguientes pruebas
-            const token = loginData.token;
+            const token = loginData.access_token;
             
             // Test 3: Obtener perfil
             console.log('\n3. Obteniendo perfil de usuario...');

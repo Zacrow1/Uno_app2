@@ -42,12 +42,8 @@ const logout = async (req, res) => {
 };
 
 const profile = async (req, res) => {
-  const auth = req.headers.authorization;
-  if (!auth) return res.status(401).json({ error: 'Token requerido' });
-  const token = auth.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, SECRET);
-    const user = await Player.findByPk(decoded.id);
+    const user = await Player.findByPk(req.user.id);
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
     return res.json({ username: user.username, email: user.email });
   } catch (e) {

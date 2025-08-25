@@ -34,7 +34,8 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.6.5",
     "ramda": "^0.29.1",
-    "sequelize": "^6.35.0"
+    "sequelize": "^6.35.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
