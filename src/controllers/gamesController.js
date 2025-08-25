@@ -198,6 +198,68 @@ const getTopCard = async (req, res) => {
   }
 };
 
+// Obtener la mano del jugador actual
+const getPlayerHand = async (req, res) => {
+  const gameId = req.params.id;
+  const playerId = req.user.id;
+  try {
+    // Simulación: devolver cartas de ejemplo
+    const hand = [
+      { id: 1, color: 'red', value: '5' },
+      { id: 2, color: 'blue', value: '7' },
+      { id: 3, color: 'green', value: '2' },
+      { id: 4, color: 'yellow', value: '9' }
+    ];
+    return res.json({ game_id: gameId, hand });
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ error: "Error al obtener la mano del jugador" });
+  }
+};
+
+// Jugar una carta
+const playCard = async (req, res) => {
+  const gameId = req.params.id;
+  const playerId = req.user.id;
+  const { playerCardId } = req.body;
+  try {
+    // Simulación: siempre exitoso por ahora
+    return res.json({ 
+      message: "Carta jugada exitosamente",
+      game_id: gameId,
+      player_card_id: playerCardId
+    });
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ error: "Error al jugar la carta" });
+  }
+};
+
+// Robar una carta
+const drawCard = async (req, res) => {
+  const gameId = req.params.id;
+  const playerId = req.user.id;
+  try {
+    // Simulación: devolver una carta aleatoria
+    const colors = ['red', 'blue', 'green', 'yellow'];
+    const values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Skip', 'Reverse', 'Draw2'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    const randomValue = values[Math.floor(Math.random() * values.length)];
+    
+    return res.json({ 
+      message: "Carta robada exitosamente",
+      game_id: gameId,
+      card: { id: Date.now(), color: randomColor, value: randomValue }
+    });
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ error: "Error al robar la carta" });
+  }
+};
+
 // Obtener los puntajes del juego
 const getGameScores = async (req, res) => {
   const gameId = req.params.id;
@@ -233,5 +295,8 @@ export default {
   getPlayersInGame,
   getCurrentPlayer,
   getTopCard,
+  getPlayerHand,
+  playCard,
+  drawCard,
   getGameScores,
 };

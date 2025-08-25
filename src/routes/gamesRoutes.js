@@ -17,6 +17,9 @@ router.get('/:id/state', authMiddleware, gamesController.getGameState);
 router.get('/:id/players', authMiddleware, gamesController.getPlayersInGame);
 router.get('/:id/current-player', authMiddleware, gamesController.getCurrentPlayer);
 router.get('/:id/top-card', authMiddleware, gamesController.getTopCard);
+router.get('/:id/hand', authMiddleware, gamesController.getPlayerHand);
+router.post('/:id/play-card', authMiddleware, gamesController.playCard);
+router.post('/:id/draw-card', authMiddleware, gamesController.drawCard);
 router.get('/:id/scores', authMiddleware, gamesController.getGameScores);
 
 export default router;
