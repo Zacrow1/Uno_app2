@@ -32,6 +32,11 @@ class UnoGame {
         document.getElementById('start-game-btn').addEventListener('click', () => this.startGame());
         document.getElementById('draw-card-btn').addEventListener('click', () => this.drawCard());
         document.getElementById('end-game-btn').addEventListener('click', () => this.endGame());
+
+        // Modal events
+        document.getElementById('modal-close').addEventListener('click', () => this.hideCreateGameModal());
+        document.getElementById('cancel-game-btn').addEventListener('click', () => this.hideCreateGameModal());
+        document.getElementById('create-game-form').addEventListener('submit', (e) => this.handleCreateGameSubmit(e));
     }
 
     switchTab(tab) {
@@ -65,13 +70,17 @@ class UnoGame {
         try {
             this.showLoading();
             const response = await this.makeRequest('/players/login', 'POST', { username, password });
-            this.token = response.token;
-            this.currentUser = response.user;
+            this.token = response.access_token;
+            this.currentUser = { username: username };
             this.setToken();
             this.showGameSection();
-            this.showMessage('Inicio de sesión exitoso', 'success');
+            this.showMessage(`¡Bienvenido de nuevo, ${username}! 🎉`, 'success');
         } catch (error) {
-            this.showMessage('Error en el inicio de sesión', 'error');
+            console.error('Login error:', error);
+            const errorMessage = error.message.includes('credentials') ? 
+                'Usuario o contraseña incorrectos' : 
+                'Error en el inicio de sesión. Inténtalo de nuevo.';
+            this.showMessage(errorMessage, 'error');
         } finally {
             this.hideLoading();
         }
@@ -86,10 +95,18 @@ class UnoGame {
         try {
             this.showLoading();
             const response = await this.makeRequest('/players/register', 'POST', { username, email, password });
-            this.showMessage('Registro exitoso. Por favor inicia sesión.', 'success');
+            this.showMessage(`¡Registro exitoso, ${username}! Por favor inicia sesión. 🎉`, 'success');
             this.switchTab('login');
+            // Limpiar el formulario de login
+            document.getElementById('login-username').value = username;
         } catch (error) {
-            this.showMessage('Error en el registro', 'error');
+            console.error('Register error:', error);
+            const errorMessage = error.message.includes('exists') ? 
+                'El usuario ya existe' : 
+                error.message.includes('fields') ? 
+                'Por favor completa todos los campos' :
+                'Error en el registro. Inténtalo de nuevo.';
+            this.showMessage(errorMessage, 'error');
         } finally {
             this.hideLoading();
         }
@@ -154,15 +171,31 @@ class UnoGame {
     }
 
     showCreateGameModal() {
-        const name = prompt('Nombre de la partida:');
-        if (!name) return;
+        document.getElementById('create-game-modal').style.display = 'block';
+        document.getElementById('game-name-input').focus();
+    }
 
-        const maxPlayers = prompt('Número máximo de jugadores (2-10):', '4');
-        if (!maxPlayers || maxPlayers < 2 || maxPlayers > 10) {
-            this.showMessage('Número de jugadores inválido', 'error');
+    hideCreateGameModal() {
+        document.getElementById('create-game-modal').style.display = 'none';
+        document.getElementById('create-game-form').reset();
+    }
+
+    handleCreateGameSubmit(e) {
+        e.preventDefault();
+        const name = document.getElementById('game-name-input').value.trim();
+        const maxPlayers = parseInt(document.getElementById('max-players-input').value);
+
+        if (!name) {
+            this.showMessage('Por favor ingresa un nombre para la partida', 'error');
             return;
         }
 
+        if (!maxPlayers || maxPlayers < 2 || maxPlayers > 10) {
+            this.showMessage('El número de jugadores debe estar entre 2 y 10', 'error');
+            return;
+        }
+
+        this.hideCreateGameModal();
         this.createGame(name, maxPlayers);
     }
 
@@ -174,11 +207,18 @@ class UnoGame {
                 rules: 'Standard UNO rules',
                 maxPlayers: parseInt(maxPlayers)
             });
-            this.showMessage('Partida creada exitosamente', 'success');
+            this.showMessage(`¡Partida "${name}" creada exitosamente! 🎮`, 'success');
             this.loadGames();
-            this.joinGame(game.id);
+            // Pequeña demora antes de unirse a la partida
+            setTimeout(() => {
+                this.joinGame(game.id);
+            }, 1000);
         } catch (error) {
-            this.showMessage('Error al crear partida', 'error');
+            console.error('Create game error:', error);
+            const errorMessage = error.message.includes('exists') ? 
+                'Ya existe una partida con ese nombre' : 
+                'Error al crear la partida. Inténtalo de nuevo.';
+            this.showMessage(errorMessage, 'error');
         } finally {
             this.hideLoading();
         }
@@ -406,13 +446,20 @@ class UnoGame {
             options.body = JSON.stringify(data);
         }
 
-        const response = await fetch(url, options);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        try {
+            const response = await fetch(url, options);
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.error || `HTTP error! status: ${response.status}`;
+                throw new Error(errorMessage);
+            }
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Request failed:', error);
+            throw error;
+        }
     }
 
     setToken() {
