@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Digital - Juego de Cartas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <h1>UNO Digital</h1>
+            <div id="user-info" class="user-info" style="display: none;">
+                <span id="username"></span>
+                <button id="logout-btn" class="btn btn-secondary">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <!-- Login/Register Section -->
+        <div id="auth-section" class="auth-section">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Iniciar Sesión</button>
+                    <button class="tab-btn" data-tab="register">Registrarse</button>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="login-form" class="auth-form active">
+                    <h2>Iniciar Sesión</h2>
+                    <form id="login-form-element">
+                        <div class="form-group">
+                            <label for="login-username">Usuario:</label>
+                            <input type="text" id="login-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Contraseña:</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </form>
+                </div>
+
+                <!-- Register Form -->
+                <div id="register-form" class="auth-form">
+                    <h2>Registrarse</h2>
+                    <form id="register-form-element">
+                        <div class="form-group">
+                            <label for="register-username">Usuario:</label>
+                            <input type="text" id="register-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email:</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Contraseña:</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Section -->
+        <div id="game-section" class="game-section" style="display: none;">
+            <!-- Game Lobby -->
+            <div id="game-lobby" class="game-lobby">
+                <h2>Sala de Juego</h2>
+                <div class="lobby-actions">
+                    <button id="create-game-btn" class="btn btn-primary">Crear Partida</button>
+                    <button id="refresh-games-btn" class="btn btn-secondary">Actualizar Partidas</button>
+                </div>
+                <div id="games-list" class="games-list">
+                    <h3>Partidas Disponibles</h3>
+                    <div id="games-container"></div>
+                </div>
+            </div>
+
+            <!-- Game Room -->
+            <div id="game-room" class="game-room" style="display: none;">
+                <div class="game-header">
+                    <h2 id="game-name"></h2>
+                    <div class="game-info">
+                        <span id="game-status"></span>
+                        <button id="leave-game-btn" class="btn btn-secondary">Abandonar Partida</button>
+                    </div>
+                </div>
+
+                <!-- Players in Game -->
+                <div class="players-section">
+                    <h3>Jugadores</h3>
+                    <div id="players-in-game"></div>
+                    <button id="start-game-btn" class="btn btn-primary" style="display: none;">Iniciar Partida</button>
+                </div>
+
+                <!-- Game Board -->
+                <div id="game-board" class="game-board" style="display: none;">
+                    <!-- Current Player Info -->
+                    <div class="current-player-info">
+                        <h3>Jugador Actual: <span id="current-player-name"></span></h3>
+                        <div class="top-card">
+                            <h4>Carta Superior:</h4>
+                            <div id="top-card-display"></div>
+                        </div>
+                    </div>
+
+                    <!-- Player Hand -->
+                    <div class="player-hand">
+                        <h3>Tus Cartas</h3>
+                        <div id="player-cards"></div>
+                        <div class="hand-actions">
+                            <button id="draw-card-btn" class="btn btn-primary">Robar Carta</button>
+                        </div>
+                    </div>
+
+                    <!-- Game Actions -->
+                    <div class="game-actions">
+                        <button id="end-game-btn" class="btn btn-danger">Terminar Partida</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+
+        <!-- Message Container -->
+        <div id="message-container" class="message-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
