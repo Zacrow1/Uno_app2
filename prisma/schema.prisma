@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ApiTracking {
+  id              String   @id @default(cuid())
+  endpointAccess  String
+  requestMethod   String
+  statusCode      Int
+  requestCount    Int      @default(1)
+  responseTimeAvg Float    @default(0)
+  responseTimeMin Float    @default(0)
+  responseTimeMax Float    @default(0)
+  timestamp       DateTime @default(now())
+  userId          String?
+  
+  @@map("api_tracking")
+}
+
+model Player {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  games     Game[]    @relation("GamePlayers")
+  createdGames Game[] @relation("GameCreator")
+  scores    Score[]
+  
+  @@map("players")
+}
+
+model Game {
+  id          String      @id @default(cuid())
+  name        String
+  maxPlayers  Int
+  status      String      @default("waiting") // waiting, playing, finished
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  creatorId   String
+  creator     Player      @relation("GameCreator", fields: [creatorId], references: [id])
+  
+  players     Player[]    @relation("GamePlayers")
+  scores      Score[]
+  
+  @@map("games")
+}
+
+model Score {
+  id        String   @id @default(cuid())
+  score     Int
+  position  Int
+  createdAt DateTime @default(now())
+  
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  
+  @@map("scores")
+}

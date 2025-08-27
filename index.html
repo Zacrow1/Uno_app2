@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Digital - Juego de Cartas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="logo">
+                        <i class="fas fa-layer-group"></i>
+                        UNO Digital
+                    </h1>
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li><a href="#" class="nav-link active" data-section="home">Inicio</a></li>
+                            <li><a href="#" class="nav-link" data-section="games">Juegos</a></li>
+                            <li><a href="#" class="nav-link" data-section="players">Jugadores</a></li>
+                            <li><a href="#" class="nav-link" data-section="scores">Puntuaciones</a></li>
+                            <li><a href="#" class="nav-link" data-section="cache">Caché</a></li>
+                        </ul>
+                    </nav>
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">Invitado</span>
+                        <button id="auth-btn" class="btn btn-primary">Iniciar Sesión</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Sección de Inicio -->
+                <section id="home" class="section active">
+                    <div class="hero">
+                        <h2>Bienvenido a UNO Digital</h2>
+                        <p>El clásico juego de cartas UNO en versión digital</p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-large" onclick="showSection('games')">
+                                <i class="fas fa-play"></i>
+                                Empezar a Jugar
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="showSection('players')">
+                                <i class="fas fa-user-plus"></i>
+                                Registrarse
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3>Jugadores</h3>
+                            <p id="total-players">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-gamepad"></i>
+                            <h3>Juegos Activos</h3>
+                            <p id="active-games">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-trophy"></i>
+                            <h3>Partidas Jugadas</h3>
+                            <p id="total-games">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <h3>Tiempo de Respuesta</h3>
+                            <p id="response-time">0ms</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Juegos -->
+                <section id="games" class="section">
+                    <div class="section-header">
+                        <h2>Gestión de Juegos</h2>
+                        <button class="btn btn-primary" onclick="showCreateGameModal()">
+                            <i class="fas fa-plus"></i>
+                            Nuevo Juego
+                        </button>
+                    </div>
+                    
+                    <div class="games-container">
+                        <div class="games-filters">
+                            <input type="text" id="game-search" placeholder="Buscar juegos..." class="search-input">
+                            <select id="game-status" class="filter-select">
+                                <option value="">Todos los estados</option>
+                                <option value="waiting">Esperando</option>
+                                <option value="playing">Jugando</option>
+                                <option value="finished">Finalizado</option>
+                            </select>
+                        </div>
+                        
+                        <div id="games-list" class="games-list">
+                            <!-- Los juegos se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Jugadores -->
+                <section id="players" class="section">
+                    <div class="section-header">
+                        <h2>Gestión de Jugadores</h2>
+                        <button class="btn btn-primary" onclick="showRegisterModal()">
+                            <i class="fas fa-user-plus"></i>
+                            Nuevo Jugador
+                        </button>
+                    </div>
+                    
+                    <div class="players-container">
+                        <div class="players-filters">
+                            <input type="text" id="player-search" placeholder="Buscar jugadores..." class="search-input">
+                        </div>
+                        
+                        <div id="players-list" class="players-list">
+                            <!-- Los jugadores se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Puntuaciones -->
+                <section id="scores" class="section">
+                    <div class="section-header">
+                        <h2>Tabla de Puntuaciones</h2>
+                        <button class="btn btn-secondary" onclick="refreshScores()">
+                            <i class="fas fa-sync"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                    
+                    <div class="scores-container">
+                        <div class="scores-filters">
+                            <select id="score-filter" class="filter-select">
+                                <option value="">Todas las puntuaciones</option>
+                                <option value="top10">Top 10</option>
+                                <option value="recent">Más recientes</option>
+                            </select>
+                        </div>
+                        
+                        <div id="scores-list" class="scores-list">
+                            <!-- Las puntuaciones se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección de Caché -->
+                <section id="cache" class="section">
+                    <div class="section-header">
+                        <h2>Gestión de Caché</h2>
+                        <div class="cache-actions">
+                            <button class="btn btn-secondary" onclick="refreshCacheStats()">
+                                <i class="fas fa-sync"></i>
+                                Actualizar
+                            </button>
+                            <button class="btn btn-danger" onclick="clearCache()">
+                                <i class="fas fa-trash"></i>
+                                Limpiar Caché
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="cache-container">
+                        <div class="cache-stats">
+                            <div class="cache-stat">
+                                <h3>Tamaño de Caché</h3>
+                                <p id="cache-size">0 / 0</p>
+                            </div>
+                            <div class="cache-stat">
+                                <h3>Entradas Cacheadas</h3>
+                                <p id="cache-entries">0</p>
+                            </div>
+                            <div class="cache-stat">
+                                <h3>Uso de Memoria</h3>
+                                <p id="cache-memory">0 KB</p>
+                            </div>
+                        </div>
+                        
+                        <div class="cache-entries">
+                            <h3>Entradas en Caché</h3>
+                            <div id="cache-entries-list" class="cache-entries-list">
+                                <!-- Las entradas se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Modal de Autenticación -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="auth-modal-title">Iniciar Sesión</h3>
+                    <button class="close-btn" onclick="closeModal('auth-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="auth-form">
+                        <div class="form-group">
+                            <label for="auth-email">Email:</label>
+                            <input type="email" id="auth-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="auth-password">Contraseña:</label>
+                            <input type="password" id="auth-password" required>
+                        </div>
+                        <div class="form-group" id="auth-name-group" style="display: none;">
+                            <label for="auth-name">Nombre:</label>
+                            <input type="text" id="auth-name">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="auth-submit-btn">Iniciar Sesión</button>
+                            <button type="button" class="btn btn-secondary" onclick="toggleAuthMode()">
+                                <span id="auth-toggle-text">Registrarse</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Crear Juego -->
+        <div id="create-game-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Crear Nuevo Juego</h3>
+                    <button class="close-btn" onclick="closeModal('create-game-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-game-form">
+                        <div class="form-group">
+                            <label for="game-name">Nombre del Juego:</label>
+                            <input type="text" id="game-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="max-players">Máximo de Jugadores:</label>
+                            <select id="max-players" required>
+                                <option value="2">2 Jugadores</option>
+                                <option value="3">3 Jugadores</option>
+                                <option value="4" selected>4 Jugadores</option>
+                                <option value="6">6 Jugadores</option>
+                                <option value="8">8 Jugadores</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Crear Juego</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('create-game-modal')">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Registro -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Registrar Nuevo Jugador</h3>
+                    <button class="close-btn" onclick="closeModal('register-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="register-name">Nombre:</label>
+                            <input type="text" id="register-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email:</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Contraseña:</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Registrar</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('register-modal')">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Detalles de Juego -->
+        <div id="game-details-modal" class="modal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3 id="game-details-title">Detalles del Juego</h3>
+                    <button class="close-btn" onclick="closeModal('game-details-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-details-content">
+                        <div class="game-info">
+                            <h4>Información del Juego</h4>
+                            <div id="game-details-info">
+                                <!-- La información se cargará dinámicamente -->
+                            </div>
+                        </div>
+                        <div class="game-players">
+                            <h4>Jugadores</h4>
+                            <div id="game-details-players">
+                                <!-- Los jugadores se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                        <div class="game-actions">
+                            <button class="btn btn-primary" id="join-game-btn" onclick="joinGame()">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Unirse al Juego
+                            </button>
+                            <button class="btn btn-success" id="start-game-btn" onclick="startGame()" style="display: none;">
+                                <i class="fas fa-play"></i>
+                                Iniciar Juego
+                            </button>
+                            <button class="btn btn-warning" id="leave-game-btn" onclick="leaveGame()" style="display: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Abandonar Juego
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notificaciones -->
+        <div id="notification" class="notification">
+            <div class="notification-content">
+                <i class="fas fa-info-circle"></i>
+                <span id="notification-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/players.js"></script>
+    <script src="js/scores.js"></script>
+    <script src="js/cache.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
