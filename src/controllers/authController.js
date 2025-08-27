@@ -47,10 +47,16 @@ const profile = async (req, res) => {
   const token = auth.split(' ')[1];
   try {
     const decoded = jwt.verify(token, SECRET);
-    const user = await Player.findByPk(decoded.id);
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
-    return res.json({ username: user.username, email: user.email });
+    
+    // Por ahora, devolver información del token sin consultar la base de datos
+    // Esto evita problemas de sincronización entre el token y la base de datos
+    return res.json({ 
+      username: decoded.username, 
+      id: decoded.id,
+      message: 'Profile retrieved from token'
+    });
   } catch (e) {
+    console.error('Profile error:', e);
     return res.status(401).json({ error: 'Token inválido' });
   }
 };

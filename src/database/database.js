@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
 
 // Import models
+import ApiStatModel from '../models/apiStat.js';
 import CardModel from '../models/card.js';
 import GameModel from '../models/game.js';
 import PlayerModel from '../models/player.js';
@@ -27,6 +28,7 @@ const Game = GameModel(sequelize, Sequelize.DataTypes);
 const Card = CardModel(sequelize, Sequelize.DataTypes);
 const Score = ScoreModel(sequelize, Sequelize.DataTypes);
 const PlayerCard = PlayerCardModel(sequelize, Sequelize.DataTypes);
+const ApiStat = ApiStatModel(sequelize, Sequelize.DataTypes);
 
 // Define associations
 Player.belongsToMany(Game, { through: 'GamePlayers' });
@@ -41,4 +43,5 @@ PlayerCard.belongsTo(Player, { foreignKey: 'playerId' });
 PlayerCard.belongsTo(Game, { foreignKey: 'gameId' });
 PlayerCard.belongsTo(Card, { foreignKey: 'cardId' });
 
-export { Card, Game, Player, PlayerCard, Score, sequelize };
+export { ApiStat, Card, Game, Player, PlayerCard, Score, sequelize };
+

@@ -290,6 +290,50 @@ npm run db:migrate    # Ejecutar migraciones
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abrir Pull Request
 
+## Frontend React
+
+El proyecto ahora incluye un **frontend completo** desarrollado con React, Vite y Tailwind CSS.
+
+### 🎮 Características del Frontend
+
+- **Interfaz Moderna**: Diseño elegante con gradientes y efectos de cristal
+- **Autenticación Visual**: Login y registro con validaciones
+- **Dashboard Interactivo**: Gestión de juegos y estadísticas
+- **Sala de Juego Visual**: Interfaz completa del UNO con cartas animadas
+- **Responsive Design**: Optimizado para móviles y desktop
+- **Tiempo Real**: Actualizaciones automáticas del estado del juego
+
+### 🚀 Ejecutar el Frontend
+
+```bash
+# Navegar al directorio frontend
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev
+```
+
+El frontend estará disponible en `http://localhost:3001`
+
+### 📁 Estructura del Frontend
+
+```
+frontend/
+├── src/
+│   ├── components/          # Componentes reutilizables
+│   ├── pages/              # Páginas de la aplicación
+│   ├── stores/             # Gestión de estado (Zustand)
+│   ├── services/           # Servicios de API
+│   └── ...
+├── package.json            # Dependencias del frontend
+└── README.md               # Documentación del frontend
+```
+
+Para más detalles, consulta el [README del Frontend](frontend/README.md).
+
 ## Autor
 
 Agustin De Luca
